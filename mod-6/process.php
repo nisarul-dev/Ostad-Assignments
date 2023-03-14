@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
     $profile_pic = $_FILES["profile_pic"];
 
-    if (empty($name) || empty($email) || empty($password) || empty($profile_pic)) {
+    if (empty($name) || empty($email) || empty($password) || $profile_pic['size'] == 0) {
         echo "All fields are required.";
         exit;
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -16,8 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Save profile picture to server with a unique filename
-var_dump($profile_pic);
-//die();
 $profile_pic_name = $_POST["name"] . '_' . date( "Y-m-d_h:i:sa" ) . '.' . pathinfo($profile_pic["name"], PATHINFO_EXTENSION);
 move_uploaded_file( $profile_pic["tmp_name"], "./uploads/$profile_pic_name" );
 
@@ -28,8 +26,8 @@ fputcsv($fp, $user_data);
 fclose($fp);
 
 // Set cookie with user's name
-setcookie("user_name", $name, time() + 3600);
+setcookie("user_name", $name, time() + 3600 * 24 * 7);
 
-// Redirect to thank you page
+// Redirect to Users page
 header("Location: users.php");
 

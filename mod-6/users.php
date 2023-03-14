@@ -1,3 +1,19 @@
+<?php
+// Check if Cookie 'user_name' exits
+if( ! isset($_COOKIE['user_name']) ) {
+    header('Location: index.php');
+    exit;
+}
+
+// Check if logged out and redirect to registration page
+if( isset($_POST['logout']) ) {
+    setcookie('user_name', "", time() - 3600*24*7);
+    header('Location: index.php');
+    exit;
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,7 +24,10 @@
     <title>Success</title>
 </head>
 <body>
-    <h1>Hi, <?php echo $_COOKIE['user_name']; ?>!</h1> >> <a href="#">Logout</a>
+    <h1>Hi, <?php echo $_COOKIE['user_name']; ?>!</h1>
+    <form method="POST">
+         >> <button type="submit" name="logout">Log Out</button>
+    </form>
     <h4>Users Table:</h4>
     <?php
     $file = fopen('users.csv', 'r');
